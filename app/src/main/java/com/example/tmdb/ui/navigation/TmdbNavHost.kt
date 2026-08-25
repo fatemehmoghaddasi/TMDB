@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tmdb.ui.screens.search.SearchScreen
 import com.example.tmdb.ui.screens.SplashScreen
-import com.example.tmdb.ui.screens.search.HomeScreen
+import com.example.tmdb.ui.screens.home.HomeScreen
 import kotlinx.serialization.Serializable
 
 @Composable

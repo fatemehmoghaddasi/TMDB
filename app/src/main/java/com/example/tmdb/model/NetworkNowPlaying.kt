@@ -3,7 +3,7 @@ package com.example.tmdb.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 @Serializable
-data class NetworkNowPlaying(
+data class NetworkBasicMovieList(
     val results : List<NetworkBasicMovie>,
     val page : Int,
     @SerialName("total_pages")
