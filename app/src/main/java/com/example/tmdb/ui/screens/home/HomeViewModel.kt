@@ -34,9 +34,9 @@ class HomeViewModel @Inject constructor(
                   //  _UiState.value = HomeUiState.Success(movies = it)
                     _UiState.update {
                         if (it is HomeUiState.Success) {
-                            it.copy(movies = movie)
+                            it.copy(nowPlayingMovies = movie)
                         } else {
-                            HomeUiState.Success(movies = movie)
+                            HomeUiState.Success(nowPlayingMovies = movie)
                         }
                     }
                 }
@@ -80,7 +80,7 @@ class HomeViewModel @Inject constructor(
 sealed interface HomeUiState {
     data object Loading : HomeUiState
     data class Success(
-        val movies: List<BasicMovie> = emptyList(),
+        val nowPlayingMovies: List<BasicMovie> = emptyList(),
         val popularMovies: List<BasicMovie> = emptyList(),
         val topRatedMovies: List<BasicMovie> = emptyList(),
     ) : HomeUiState

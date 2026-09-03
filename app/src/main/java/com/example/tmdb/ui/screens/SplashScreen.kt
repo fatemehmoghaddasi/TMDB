@@ -1,8 +1,6 @@
 package com.example.tmdb.ui.screens
 
-import android.window.SplashScreen
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,19 +23,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import com.example.tmdb.R.drawable
+import kotlin.time.Duration.Companion.seconds
 
 
 @Composable
 fun SplashScreen(
     onNavigateToHome: () -> Unit
 ) {
-
     LaunchedEffect(Unit) {    //دیلی تو کروتین اجرا میشه در واقع معنیش اینه که این کامپوزبل وقتی وارد صفحه شد فقط یکبار اجرا بشه
-        delay(3000)
-    onNavigateToHome()          // 3000 یعنی 3 ثانیه
-
+        delay(3.seconds)
+        onNavigateToHome()          // 3000 یعنی 3 ثانیه
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,17 +51,16 @@ fun SplashScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
-        )
-        {
-
+        ) {
             Image(
                 painter = painterResource(id = com.example.tmdb.R.drawable.woman),
                 contentDescription = "Woman Photo",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-100.dp)),
+                    .offset(y = ((-100).dp)),
                 contentScale = ContentScale.Fit
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -75,7 +71,7 @@ fun SplashScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = (-40.dp))
+                    .offset(y = ((-40).dp))
 
             )
         }

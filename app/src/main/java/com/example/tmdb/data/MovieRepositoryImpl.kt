@@ -2,8 +2,8 @@ package com.example.tmdb.data
 
 import com.example.tmdb.model.BasicMovie
 import com.example.tmdb.model.MovieListType
-import com.example.tmdb.model.mapToBasicMovie
 import com.example.tmdb.network.MovieService
+import com.example.tmdb.network.model.mapToBasicMovie
 import jakarta.inject.Inject
 
 
@@ -26,7 +26,14 @@ class MovieRepositoryImpl @Inject constructor(
                     it.mapToBasicMovie()
                 }
             }
+        }
+    }
 
+    override suspend fun search(query: String): Result<List<BasicMovie>> {
+        return runCatching {
+            movieService.search(query).results.map {
+                it.mapToBasicMovie()
+            }
         }
     }
 }
