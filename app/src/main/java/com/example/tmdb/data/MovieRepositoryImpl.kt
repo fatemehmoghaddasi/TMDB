@@ -36,6 +36,12 @@ class MovieRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getMovieById(id: Long): Result<BasicMovie> {
+        return runCatching {
+            movieService.getMovieById(id).mapToBasicMovie()
+        }
+    }
 }
 
 /*try {

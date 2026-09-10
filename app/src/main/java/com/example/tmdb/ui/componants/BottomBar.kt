@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.tmdb.ui.navigation.DetailRoute
 import com.example.tmdb.ui.navigation.FavoriteRoute
 import com.example.tmdb.ui.navigation.HomeRoute
 
@@ -28,12 +29,16 @@ fun BottomBar(
         NavigationBarItem(
             selected = currentDestination?.hasRoute<HomeRoute>() == true,
             onClick = {
-                navController.navigate(HomeRoute) {
-                    popUpTo(HomeRoute) {
-                        saveState = true
+                if (currentDestination?.hasRoute<DetailRoute>() == true) {
+                    navController.popBackStack()
+                } else {
+                    navController.navigate(HomeRoute) {
+                        popUpTo(HomeRoute) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
             },
             icon = {

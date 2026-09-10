@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.tmdb.ui.componants.BottomBar
 import com.example.tmdb.ui.screens.SplashScreen
 import com.example.tmdb.ui.screens.details.MovieDetailScreen
@@ -64,8 +65,13 @@ fun TmdbNavHost() {
             composable<FavoriteRoute> {
                 FavoriteScreen()
             }
-            composable<DetailRoute> {
-                MovieDetailScreen()
+            composable<DetailRoute> { backStackEntry ->
+                val backStack = backStackEntry.toRoute<DetailRoute>()
+                MovieDetailScreen(
+                    movieId = backStack.id,
+
+                    )
+
             }
         }
     }

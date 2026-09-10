@@ -7,4 +7,6 @@ interface MovieRepository {
     suspend fun getBasicMovieList(movieListType: MovieListType): Result<List<BasicMovie>>
 
     suspend fun search(query: String): Result<List<BasicMovie>>
+
+    suspend fun getMovieById(id: Long): Result<BasicMovie>
 }
