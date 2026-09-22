@@ -52,7 +52,7 @@ fun SearchScreen(
     SearchScreen(
         uiState = uiState,
         favoriteMovies = favoriteMovies,
-        search = viewModel::search,
+        search = { viewModel.search(it) },
         setIsFavorite = favoriteViewModel::setIsFavorite,
         onMovieClick = {}
     )

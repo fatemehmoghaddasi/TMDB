@@ -18,21 +18,26 @@ class HomeViewModel @Inject constructor(
     // private val movieService: MovieService
     private val movieRepository: MovieRepository
 ) : ViewModel() {
-    private val _UiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
-    val uiState: StateFlow<HomeUiState> = _UiState.asStateFlow()
+    private val _uiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     init {
         loadData()
     }
 
-    private fun loadData() {
-        _UiState.value = HomeUiState.Loading
+    fun loadData() {
+        _uiState.value = HomeUiState.Loading
 
         viewModelScope.launch {
+            _isRefreshing.value = true
+
             movieRepository.getBasicMovieList(MovieListType.NOW_PLAYING)
                 .onSuccess { movie ->
                   //  _UiState.value = HomeUiState.Success(movies = it)
-                    _UiState.update {
+                    _uiState.update {
                         if (it is HomeUiState.Success) {
                             it.copy(nowPlayingMovies = movie)
                         } else {
@@ -42,12 +47,13 @@ class HomeViewModel @Inject constructor(
                 }
 
                 .onFailure {
-                    _UiState.value = HomeUiState.Error(it)
+                    _uiState.value = HomeUiState.Error(it)
                 }
+
             movieRepository.getBasicMovieList(MovieListType.POPULAR)
                 .onSuccess { movie ->
                     // _UiState.value = HomeUiState.Success(popularMovies = it)
-                    _UiState.update {
+                    _uiState.update {
                         if (it is HomeUiState.Success) {
                             it.copy(popularMovies = movie)
                         } else {
@@ -56,12 +62,13 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    _UiState.value = HomeUiState.Error(it)
+                    _uiState.value = HomeUiState.Error(it)
                 }
+
             movieRepository.getBasicMovieList(MovieListType.TOP_RATED)
                 .onSuccess { movie ->
                     //_UiState.value = HomeUiState.Success(topRatedMovies = it)
-                    _UiState.update {
+                    _uiState.update {
                         if (it is HomeUiState.Success) {
                             it.copy(topRatedMovies = movie)
                         } else {
@@ -70,8 +77,9 @@ class HomeViewModel @Inject constructor(
                     }
                 }
                 .onFailure {
-                    _UiState.value = HomeUiState.Error(it)
+                    _uiState.value = HomeUiState.Error(it)
                 }
+            _isRefreshing.value = false
         }
 
     }

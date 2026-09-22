@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,12 +44,15 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val favoriteMovies by favoriteViewModel.favoriteMovies.collectAsStateWithLifecycle()
+    val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
 
     HomeScreen(
         uiState = uiState,
         favoriteMovies = favoriteMovies,
+        isRefreshing = isRefreshing,
         onMovieClick = onMovieClick,
         onSearchClick = onSearchClick,
+        onRefresh = viewModel::loadData,
         setIsFavorite = favoriteViewModel::setIsFavorite
 //        setIsFavorite = { isFavorite, movie ->
 //            favoriteViewModel.setIsFavorite(isFavorite, movie)
@@ -61,57 +65,66 @@ fun HomeScreen(
 private fun HomeScreen(
     uiState: HomeUiState,
     favoriteMovies: List<BasicMovie>,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
     onMovieClick: (Long) -> Unit,
     onSearchClick: () -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Home")
-                },
-                actions = {
-                    IconButton(onClick = onSearchClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = "Search"
-                        )
+    PullToRefreshBox(
+        isRefreshing = isRefreshing,
+        onRefresh = { onRefresh() }
+    ) {
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = "Home")
+                    },
+                    actions = {
+                        IconButton(onClick = onSearchClick) {
+                            Icon(
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = "Search"
+                            )
+                        }
+                    }
+                )
+            },
+            modifier = modifier,
+        ) { innerPadding ->
+            when (uiState) {
+                HomeUiState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
-            )
-        },
-        modifier = modifier,
-    ) { innerPadding ->
-        when (uiState) {
-            is HomeUiState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
+
+                is HomeUiState.Success -> {
+                    HomeContent(
+                        uiState = uiState,
+                        favoriteMovies = favoriteMovies,
+                        modifier = Modifier.padding(innerPadding),
+                        onMovieClick = onMovieClick,
+                        setIsFavorite = setIsFavorite,
+
+                        )
                 }
-            }
 
-            is HomeUiState.Success -> {
-                HomeContent(
-                    uiState = uiState,
-                    favoriteMovies = favoriteMovies,
-                    modifier = Modifier.padding(innerPadding),
-                    onMovieClick = onMovieClick,
-                    setIsFavorite = setIsFavorite,
-                )
-            }
-
-            is HomeUiState.Error -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "Error happened", color = Color.Red
-                    )
+                is HomeUiState.Error -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "Error happened", color = Color.Red
+                        )
+                    }
                 }
             }
         }
@@ -127,6 +140,8 @@ private fun HomeContent(
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -159,6 +174,7 @@ private fun HomeContent(
         )
     }
 }
+
 
 @Composable
 fun MovieListRow(

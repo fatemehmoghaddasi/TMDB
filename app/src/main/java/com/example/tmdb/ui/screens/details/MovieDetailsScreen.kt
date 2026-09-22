@@ -34,7 +34,7 @@ fun MovieDetailScreen(
     movieId: Long,
     viewModel: DetailViewModel = hiltViewModel()
 ) {
-    val uiState by viewModel.UiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(movieId) {
         viewModel.getMovieById(movieId)

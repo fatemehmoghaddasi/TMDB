@@ -12,19 +12,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class DetailViewModel @Inject constructor(private val movieRepository: MovieRepository) :
-    ViewModel() {
-    private val _UiState: MutableStateFlow<DetailUiState> = MutableStateFlow(DetailUiState.Loading)
-    val UiState: StateFlow<DetailUiState> = _UiState.asStateFlow()
+class DetailViewModel @Inject constructor(
+    private val movieRepository: MovieRepository
+) : ViewModel() {
+    private val _uiState: MutableStateFlow<DetailUiState> = MutableStateFlow(DetailUiState.Loading)
+    val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
     fun getMovieById(id: Long) {
         viewModelScope.launch {
-            _UiState.value = DetailUiState.Loading
+            _uiState.value = DetailUiState.Loading
             movieRepository.getMovieById(id)
                 .onSuccess {
-                    _UiState.value = DetailUiState.Success(it)
+                    _uiState.value = DetailUiState.Success(it)
                 }
                 .onFailure {
-                    _UiState.value = DetailUiState.Error(it)
+                    _uiState.value = DetailUiState.Error(it)
                 }
         }
     }
