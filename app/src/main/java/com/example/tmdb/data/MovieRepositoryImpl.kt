@@ -1,9 +1,11 @@
 package com.example.tmdb.data
 
 import com.example.tmdb.model.BasicMovie
+import com.example.tmdb.model.Credits
 import com.example.tmdb.model.MovieListType
 import com.example.tmdb.network.MovieService
 import com.example.tmdb.network.model.mapToBasicMovie
+import com.example.tmdb.network.model.mapToCredits
 import jakarta.inject.Inject
 
 
@@ -26,6 +28,18 @@ class MovieRepositoryImpl @Inject constructor(
                     it.mapToBasicMovie()
                 }
             }
+        }
+    }
+
+    override suspend fun getPersonMovieCredits(id: Long): Result<List<BasicMovie>> {
+        return runCatching {
+            movieService.getPersonMovieCredits(id).cast.map { it.mapToBasicMovie() }
+        }
+    }
+
+    override suspend fun getMovieCredits(id: Long): Result<Credits> {
+        return runCatching {
+            movieService.getMovieById(id).credits!!.mapToCredits()
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.tmdb.network
 
 import com.example.tmdb.network.model.NetworkBasicMovie
 import com.example.tmdb.network.model.NetworkBasicMovieList
+import com.example.tmdb.network.model.NetworkPersonCredits
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -19,6 +20,10 @@ interface MovieService {
     @GET("search/movie")
     suspend fun search(@Query("query") query: String): NetworkBasicMovieList
 
-    @GET("movie/{id}")
+    @GET("movie/{id}?append_to_response=credits")
     suspend fun getMovieById(@Path("id") id: Long): NetworkBasicMovie
+
+    @GET("person/{person_id}/movie_credits")
+    suspend fun getPersonMovieCredits(@Path("person_id") id: Long): NetworkPersonCredits
+
 }

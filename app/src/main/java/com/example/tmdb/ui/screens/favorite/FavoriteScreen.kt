@@ -38,7 +38,7 @@ fun FavoriteScreen(
 @Composable
 private fun FavoriteScreen(
     movies: List<BasicMovie>,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -64,7 +64,7 @@ private fun FavoriteScreen(
 @Composable
 fun FavoriteContent(
     movies: List<BasicMovie>,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier,
 ) {

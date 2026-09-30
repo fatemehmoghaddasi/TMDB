@@ -30,7 +30,7 @@ import com.example.tmdb.model.BasicMovie
 fun MovieItem(
     movie: BasicMovie,
     isFavorite: Boolean,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
@@ -38,7 +38,7 @@ fun MovieItem(
     Column(
         modifier = modifier
             .width(140.dp)
-            .clickable { onMovieClick(movie.id) },
+            .clickable { onMovieClick(movie) },
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box {

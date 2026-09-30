@@ -43,8 +43,10 @@ import com.example.tmdb.ui.theme.TMDBTheme
 
 @Composable
 fun SearchScreen(
+
     viewModel: SearchViewModel = hiltViewModel(),
-    favoriteViewModel: FavoriteViewModel = hiltViewModel()
+    favoriteViewModel: FavoriteViewModel = hiltViewModel(),
+    onMovieClick: (BasicMovie) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val favoriteMovies by favoriteViewModel.favoriteMovies.collectAsStateWithLifecycle()
@@ -54,7 +56,7 @@ fun SearchScreen(
         favoriteMovies = favoriteMovies,
         search = { viewModel.search(it) },
         setIsFavorite = favoriteViewModel::setIsFavorite,
-        onMovieClick = {}
+        onMovieClick = onMovieClick
     )
 }
 
@@ -63,7 +65,7 @@ private fun SearchScreen(
     uiState: SearchUiState,
     favoriteMovies: List<BasicMovie>,
     search: (String) -> Unit,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -142,7 +144,7 @@ private fun SearchScreen(
 private fun SearchContent(
     uiState: SearchUiState,
     favoriteMovies: List<BasicMovie>,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -189,6 +191,8 @@ private fun SearchContent(
 @Preview
 private fun SearchScreenPreview() {
     TMDBTheme {
-        SearchScreen()
+        SearchScreen(
+            onMovieClick = {}
+        )
     }
 }

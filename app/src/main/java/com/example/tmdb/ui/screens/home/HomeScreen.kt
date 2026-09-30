@@ -3,13 +3,13 @@ package com.example.tmdb.ui.screens.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,7 +37,7 @@ import com.example.tmdb.ui.screens.favorite.FavoriteViewModel
 
 @Composable
 fun HomeScreen(
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     onSearchClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
     favoriteViewModel: FavoriteViewModel = hiltViewModel()
@@ -67,7 +67,7 @@ private fun HomeScreen(
     favoriteMovies: List<BasicMovie>,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     onSearchClick: () -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier
@@ -136,42 +136,45 @@ private fun HomeScreen(
 private fun HomeContent(
     uiState: HomeUiState.Success,
     favoriteMovies: List<BasicMovie>,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
 
-    Column(
+    LazyColumn(
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp)
     ) {
-        MovieListRow(
-            title = "Now Playing",
-            movies = uiState.nowPlayingMovies,
-            favoriteMovies = favoriteMovies,
-            onMovieClick = onMovieClick,
-            setIsFavorite = setIsFavorite
-        )
-
-        MovieListRow(
-            title = "Popular Movies",
-            movies = uiState.popularMovies,
-            favoriteMovies = favoriteMovies,
-            onMovieClick = onMovieClick,
-            setIsFavorite = setIsFavorite
-        )
-
-        MovieListRow(
-            title = "Top Rated",
-            movies = uiState.topRatedMovies,
-            favoriteMovies = favoriteMovies,
-            onMovieClick = onMovieClick,
-            setIsFavorite = setIsFavorite
-        )
+        item {
+            MovieListRow(
+                title = "Now Playing",
+                movies = uiState.nowPlayingMovies,
+                favoriteMovies = favoriteMovies,
+                onMovieClick = onMovieClick,
+                setIsFavorite = setIsFavorite
+            )
+        }
+        item {
+            MovieListRow(
+                title = "Popular Movies",
+                movies = uiState.popularMovies,
+                favoriteMovies = favoriteMovies,
+                onMovieClick = onMovieClick,
+                setIsFavorite = setIsFavorite
+            )
+        }
+        item {
+            MovieListRow(
+                title = "Top Rated",
+                movies = uiState.topRatedMovies,
+                favoriteMovies = favoriteMovies,
+                onMovieClick = onMovieClick,
+                setIsFavorite = setIsFavorite
+            )
+        }
     }
 }
 
@@ -181,7 +184,7 @@ fun MovieListRow(
     movies: List<BasicMovie>,
     title: String,
     favoriteMovies: List<BasicMovie>,
-    onMovieClick: (Long) -> Unit,
+    onMovieClick: (BasicMovie) -> Unit,
     setIsFavorite: (Boolean, BasicMovie) -> Unit,
     modifier: Modifier = Modifier
 ) {

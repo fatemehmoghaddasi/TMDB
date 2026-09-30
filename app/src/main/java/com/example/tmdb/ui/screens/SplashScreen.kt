@@ -31,8 +31,8 @@ fun SplashScreen(
     onNavigateToHome: () -> Unit
 ) {
     LaunchedEffect(Unit) {    //دیلی تو کروتین اجرا میشه در واقع معنیش اینه که این کامپوزبل وقتی وارد صفحه شد فقط یکبار اجرا بشه
-        delay(3.seconds)
-        onNavigateToHome()          // 3000 یعنی 3 ثانیه
+        delay(1.seconds)
+        onNavigateToHome()
     }
 
     Box(

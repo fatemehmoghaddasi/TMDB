@@ -28,7 +28,8 @@ data class NetworkBasicMovie(
     @SerialName("vote_average")
     val voteAverage : Float,
     @SerialName("vote_count")
-    val voteCount : Int
+    val voteCount: Int,
+    val credits: NetworkCredits? = null
 )
 
 fun NetworkBasicMovie.mapToBasicMovie() = BasicMovie(
@@ -40,6 +41,7 @@ fun NetworkBasicMovie.mapToBasicMovie() = BasicMovie(
     backdropPath = backdropPath,
     posterPath = posterPath,
     voteAverage = voteAverage,
-    voteCount = voteCount
+    voteCount = voteCount,
+    credits = credits?.mapToCredits()
 )
 

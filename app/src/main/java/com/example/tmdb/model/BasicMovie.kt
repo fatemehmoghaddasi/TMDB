@@ -11,7 +11,8 @@ data class BasicMovie(
     val backdropPath: String?,
     val posterPath: String?,
     val voteAverage: Float,
-    val voteCount: Int
+    val voteCount: Int,
+    val credits: Credits? = null,
 )
 
 fun BasicMovie.mapToMovieEntity() = FavoriteMovieEntity(
