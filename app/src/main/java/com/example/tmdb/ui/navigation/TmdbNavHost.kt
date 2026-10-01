@@ -69,19 +69,27 @@ fun TmdbNavHost(
                 ),
                 onBackClick = { navController.popBackStack() },
                 onSearchClick = { navController.navigate(SearchRoute) },
-                onPersonClick = { personId ->
-                    navController.navigate(PersonDetailRoute(personId))
+                onPersonClick = { cast ->
+                    navController.navigate(
+                        PersonDetailRoute(
+                            personId = cast.id,
+                            name = cast.name,
+                            profilePath = cast.profilePath
+                        )
+                    )
                 }
 
             )
         }
         composable<PersonDetailRoute> { backStackEntry ->
-            val personId = backStackEntry.toRoute<PersonDetailRoute>()
+            val person = backStackEntry.toRoute<PersonDetailRoute>()
             PersonDetailScreen(
                 viewModel = hiltViewModel<PersonDetailViewModel, PersonDetailViewModel.PersonDetailViewModelFactory>(
-                    creationCallback = { it.create(personId.personId) }
+                    creationCallback = { it.create(person.personId) }
                 ),
                 onBackClick = { navController.popBackStack() },
+                name = person.name,
+                profilePath = person.profilePath
             )
         }
     }
@@ -104,4 +112,8 @@ data object FavoriteRoute
 data class DetailRoute(val id: Long)
 
 @Serializable
-data class PersonDetailRoute(val personId: Long)
+data class PersonDetailRoute(
+    val personId: Long,
+    val name: String,
+    val profilePath: String?,
+)

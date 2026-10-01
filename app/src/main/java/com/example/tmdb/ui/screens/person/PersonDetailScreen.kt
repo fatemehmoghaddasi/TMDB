@@ -4,16 +4,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -28,20 +31,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.tmdb.common.UiConstants
 import com.example.tmdb.model.BasicMovie
-import com.example.tmdb.model.Cast
 import com.example.tmdb.ui.screens.person.PersonDetailViewModel.PersonDetailUiState
 
 @Composable
 fun PersonDetailScreen(
     viewModel: PersonDetailViewModel,
+    name: String,
+    profilePath: String?,
     onBackClick: () -> Unit,
 
     ) {
@@ -49,6 +53,8 @@ fun PersonDetailScreen(
 
     PersonDetailScreen(
         uiState = uiState,
+        name = name,
+        profilePath = profilePath,
         onBackClick = onBackClick,
     )
 }
@@ -56,9 +62,12 @@ fun PersonDetailScreen(
 @Composable
 private fun PersonDetailScreen(
     uiState: PersonDetailUiState,
+    name: String,
+    profilePath: String?,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -82,12 +91,41 @@ private fun PersonDetailScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding = PaddingValues(16.dp)
                 ) {
+                    item(
+                        span = { GridItemSpan(maxLineSpan) }
+                    ) {
+                        Column(
+                            Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            AsyncImage(
+                                model = "${UiConstants.POSTER_BASE_URL}${profilePath}",
+                                contentDescription = "Profile Image",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(140.dp)
+                                    .clip(CircleShape)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = name,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                        }
+                    }
+
                     items(uiState.movies) { movie ->
                         PersonMovieItem(
                             movie = movie,
                         )
                     }
                 }
+
             }
 
             is PersonDetailUiState.Error -> {
@@ -164,32 +202,4 @@ private fun PersonMovieItem(
         )
     }
 }
-
-@Composable
-private fun CastImage(
-    cast: Cast,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = Modifier
-            .width(100.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AsyncImage(
-            model = "${UiConstants.POSTER_BASE_URL}${cast.profilePath}",
-            contentDescription = "Casts",
-            modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(16.dp))
-        )
-        Text(
-            text = cast.name,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-
 

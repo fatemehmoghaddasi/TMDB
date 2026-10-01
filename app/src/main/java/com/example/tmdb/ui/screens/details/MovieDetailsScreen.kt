@@ -50,7 +50,7 @@ fun DetailScreen(
     viewModel: DetailViewModel,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onPersonClick: (Long) -> Unit,
+    onPersonClick: (Cast) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,7 +69,7 @@ private fun DetailScreen(
     uiState: DetailUiState,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onPersonClick: (Long) -> Unit,
+    onPersonClick: (Cast) -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -121,7 +121,7 @@ private fun MovieDetailContent(
     credits: Credits,
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onPersonClick: (Long) -> Unit,
+    onPersonClick: (Cast) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -261,7 +261,7 @@ private fun MovieInfo(
 @Composable
 private fun Casts(
     cast: List<Cast>,
-    onPersonClick: (Long) -> Unit,
+    onPersonClick: (Cast) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -275,7 +275,7 @@ private fun Casts(
             Column(
                 modifier = Modifier
                     .width(100.dp)
-                    .clickable { onPersonClick(cast.id) },
+                    .clickable { onPersonClick(cast) },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AsyncImage(
