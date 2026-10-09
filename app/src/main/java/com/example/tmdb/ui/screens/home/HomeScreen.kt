@@ -3,13 +3,17 @@ package com.example.tmdb.ui.screens.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tmdb.model.BasicMovie
 import com.example.tmdb.ui.componants.MovieItem
+import com.example.tmdb.ui.componants.MoviePagerItem
 import com.example.tmdb.ui.screens.favorite.FavoriteViewModel
 
 
@@ -141,43 +146,85 @@ private fun HomeContent(
     modifier: Modifier = Modifier
 ) {
 
-
-    LazyColumn(
+    Column(
         modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
+
     ) {
-        item {
-            MovieListRow(
-                title = "Now Playing",
-                movies = uiState.nowPlayingMovies,
-                favoriteMovies = favoriteMovies,
-                onMovieClick = onMovieClick,
-                setIsFavorite = setIsFavorite
-            )
-        }
-        item {
-            MovieListRow(
-                title = "Popular Movies",
-                movies = uiState.popularMovies,
-                favoriteMovies = favoriteMovies,
-                onMovieClick = onMovieClick,
-                setIsFavorite = setIsFavorite
-            )
-        }
-        item {
-            MovieListRow(
-                title = "Top Rated",
-                movies = uiState.topRatedMovies,
-                favoriteMovies = favoriteMovies,
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MoviePager(
+            title = "Now Playing",
+            movies = uiState.nowPlayingMovies,
+            favoriteMovies = favoriteMovies,
+            onMovieClick = onMovieClick,
+            setIsFavorite = setIsFavorite
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MovieListRow(
+            title = "Popular Movies",
+            movies = uiState.popularMovies,
+            favoriteMovies = favoriteMovies,
+            onMovieClick = onMovieClick,
+            setIsFavorite = setIsFavorite
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MovieListRow(
+            title = "Top Rated",
+            movies = uiState.topRatedMovies,
+            favoriteMovies = favoriteMovies,
+            onMovieClick = onMovieClick,
+            setIsFavorite = setIsFavorite
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+
+@Composable
+fun MoviePager(
+    movies: List<BasicMovie>,
+    title: String,
+    favoriteMovies: List<BasicMovie>,
+    onMovieClick: (BasicMovie) -> Unit,
+    setIsFavorite: (Boolean, BasicMovie) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val pagerState = rememberPagerState { movies.size }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+
+    ) {
+        Text(
+            text = title,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth()
+        ) { pageIndex ->
+            val movie = movies[pageIndex]
+
+            MoviePagerItem(
+                movie = movie,
+                isFavorite = favoriteMovies.any { it.id == movie.id },
                 onMovieClick = onMovieClick,
                 setIsFavorite = setIsFavorite
             )
         }
     }
-}
 
+}
 
 @Composable
 fun MovieListRow(
